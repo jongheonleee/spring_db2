@@ -23,11 +23,11 @@ import java.util.Optional;
  * JdbcTemplate
  */
 @Slf4j
-public class JdbcTemplateItemRepository implements ItemRepository {
+public class JdbcTemplateItemRepositoryV1 implements ItemRepository {
 
     private final JdbcTemplate template;
 
-    public JdbcTemplateItemRepository(DataSource dataSource) {
+    public JdbcTemplateItemRepositoryV1(DataSource dataSource) {
         this.template = new JdbcTemplate(dataSource);
     }
 
@@ -55,7 +55,7 @@ public class JdbcTemplateItemRepository implements ItemRepository {
 
     @Override
     public void update(Long itemId, ItemUpdateDto updateParam) {
-        String sql = "update item set item_name=?, price=?, quantity=?, where id=?";
+        String sql = "update item set item_name=?, price=?, quantity=? where id=?";
 
         template.update(sql,
                 updateParam.getItemName(),
@@ -67,7 +67,7 @@ public class JdbcTemplateItemRepository implements ItemRepository {
 
     @Override
     public Optional<Item> findById(Long id) {
-        String sql = "select id, item_name, price, quantity where id = ?";
+        String sql = "select id, item_name, price, quantity from item where id = ?";
 
         try {
             Item item = template.queryForObject(sql, itemRowMapper(), id);
